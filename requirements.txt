@@ -1,0 +1,22 @@
+Django>=3.2.4,<3.3
+djangorestframework>=3.12.4,<3.13
+Markdown==3.3.6
+django-filter==21.1
+psycopg2>=2.8.6,<2.9
+flake8>=3.9.0,<4.0.0
+
+django-cors-headers==3.11.0
+
+virtualenv
+
+drf-writable-nested
+
+drf-spectacular>=0.15.1,<0.16
+
+uwsgi>=2.0.19,<2.1
+
+django-material==1.10.0
+django-viewflow==1.11.0
+
+#Para pruebas - borrar en produccion
+Pygments

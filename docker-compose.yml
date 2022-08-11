@@ -1,0 +1,75 @@
+version: '3.5'
+
+services:
+  vf_test_dFront_service:
+    container_name: vf_test_dfront
+    image: nginx:1.20.1
+    restart: always
+    volumes:
+      - /home/donbungle/Proyectos/devices/dFront/:/usr/share/nginx/html
+    ports:
+        - "9000:80"
+    logging:
+      driver: none
+
+  vf_test_app:
+    container_name: vf_test_app
+    restart: always
+    build:
+      context: ./
+    command: sh -c "cd proy_dir && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "9001:8000"
+    volumes:
+      - ./:/app
+    links:
+      - vf_test_postgres
+    environment:
+      POSTGRES_PASSWORD: '1q2w3e4r5t'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_URL: vf_test_postgres
+      POSTGRES_DB: 'base_db'
+    networks:
+      - vf_test_nw_postgres
+    depends_on:
+      - vf_test_postgres
+
+  vf_test_postgres:
+    container_name: vf_test_db
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_DB: 'base_db'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: '1q2w3e4r5t'
+      PGDATA: /data/postgres
+    volumes:
+      - vf_test_vol_postgres:/data/postgres
+    ports:
+      - "9002:5432"
+    networks:
+      - vf_test_nw_postgres
+    restart: unless-stopped
+
+  vf_test_pgadmin:
+    container_name: vf_test_db_admin
+    image: dpage/pgadmin4:6.8
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'victor.catalan@device.cl'
+      PGADMIN_DEFAULT_PASSWORD: '123456'
+    volumes:
+      - vf_test_vol_pgadmin:/root/.pgadmin
+    ports:
+      - "9003:80"
+    networks:
+      - vf_test_nw_postgres
+    restart: unless-stopped
+    logging:
+      driver: none
+
+networks:
+    vf_test_nw_postgres:
+      driver: bridge
+
+volumes:
+    vf_test_vol_postgres:
+    vf_test_vol_pgadmin:
