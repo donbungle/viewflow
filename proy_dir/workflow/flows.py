@@ -21,7 +21,7 @@ class OperacionFlow(Flow):
         flow.View(
             UpdateProcessView,
             fields=["aprobado_middle"]
-        ).Permission('helloworld.can_start_request')
+        ).Permission('workflow.can_start_operation')
         .Next(this.check_aprobacion_middle)
     )
 
@@ -54,7 +54,8 @@ class OperacionFlow(Flow):
                 "numero",
                 "texto",
             ]
-        ).Next(this.check_aprobacion_benito)
+        ).Permission('workflow.can_see_hidden_field')
+        .Next(this.check_aprobacion_benito)
     )
 
     check_aprobacion_benito = (
